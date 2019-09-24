@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+    www:
+        image: wordpress
+        ports:
+            - "8001:80"
+        environment:
+            WORDPRESS_DB_NAME: wordpress
+            WORDPRESS_DB_USER: root
+            WORDPRESS_DB_PASSWORD: root
+        volumes:
+            - ./www:/var/www/html/
+        links:
+            - db:mysql
+        networks:
+            - default
+    db:
+        image: mysql:5.7.22
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - persistent:/var/lib/mysql
+        networks:
+            - default
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links:
+            - db:db
+        ports:
+            - 8000:80
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+
+volumes:
+    persistent:
